@@ -1,0 +1,10 @@
+google:
+  credentials_path: '~/dev/football/credentials'
+  spreadsheet_id: '1tyso62sW52JGnJpFsHPSMNv0hnqUCpStgmKUuRVfcyg'
+games:
+  year: 2021
+  url:
+    bowls: 'http://www.espn.com/college-football/scoreboard/_/group/80/year/{year}/seasontype/3/week/1'
+    inseason: 'http://www.espn.com/college-football/scoreboard/_/group/80/year/{year}/seasontype/2/week/{week}'
+output: '~/dev/football/game_lists'
+player_list: ['Hoke', 'Mike', 'Tom', 'Paul', 'Brian', 'Alex', 'Scott', 'Chris', 'Sean']
