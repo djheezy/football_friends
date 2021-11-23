@@ -1,7 +1,7 @@
 """
-
+Prepares the raw data pulled by the scraper into dataframes that are
+ready to be uploaded to the pick em Google sheet
 """
-
 import pandas as pd
 import numpy as np
 import logging
@@ -10,13 +10,27 @@ from datetime import datetime
 
 from . import google_io
 
-
 LOGGER = logging.getLogger(__file__)
 
 
 def pick_sheet_summary(game_data):
     """
+    Produce a short dataframe of game data for upload to individual
+    group members' sheets. This view contains the columns for the
+    game week and date; indicator for whether the game is a mandatory
+    pick; odds favorite, underdog, spread, total, and implied score;
+    and location of the game.
+
+    Parameters
+    ----------
+    game_data : pandas.DataFrame
+        Dataframe containing the full game data for a single week of
+        games as scraped from ESPN
     
+    Returns
+    -------
+    short_df : pandas.DataFrame
+        Dataframe containing the individual picks view of game data
     """
     short_df = pd.DataFrame.from_records(
         columns=['Week', 'Datetime', 'Mandatory', 'Favorite', 'Location',
@@ -32,7 +46,25 @@ def pick_sheet_summary(game_data):
 
 def master_sheet_summary(full_df, short_df):
     """
-    
+    Produce the complete dataframe for the game details
+    with the combination of all game attributes and the
+    processed spread information produced for the individual
+    picks views.
+
+    Parameters
+    ----------
+    full_df : pandas.DataFrame
+        Dataframe containing the full set of raw data for
+        all games scraped from ESPN
+    short_df : pandas.DataFrame
+        Dataframe containing the picks view for individual
+        pick em sheets
+
+    Returns
+    -------
+    combined_df : pandas.DataFrame
+        Dataframe containing the full data for all games
+        to be uploaded to the 'Game List' sheet
     """
     prep_short_df = short_df.copy()
     prep_short_df.drop(columns=['Week', 'Datetime'], inplace=True)

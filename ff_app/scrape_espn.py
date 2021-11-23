@@ -55,7 +55,14 @@ class GetGameData():
         soup = bs(request.text, "html5lib")
         soup_scripts = soup.select('script')
         s_index = self.find_script_index(soup_scripts)
-        score_data = str(soup_scripts[s_index]).split('=', 1)[1].lstrip(' ').replace(';</script>', '').replace('&#39;', "'").split(';window', 1)[0]
+        score_data = (
+            str(soup_scripts[s_index])
+                .split('=', 2)[-1]
+                .lstrip(' ')
+                .replace(';</script>', '')
+                .replace('&#39;', "'")
+                .split(';window', 1)[0]
+        )
 
         return json.loads(score_data)
 
@@ -69,7 +76,7 @@ class GetGameData():
     def all_games_dict(self, request_data=None):
         data = request_data or self.request_data
 
-        games = data['events']
+        games = data['page']['content']['scoreboard']['evts']
 
         game_dict = {}
         for i, game in enumerate(games):
@@ -85,7 +92,7 @@ class GetGameData():
                          'odds_line': game_fields.get_game_odds_line(game),
                          'odds_line_fav': game_fields.parse_game_odds_line(game_fields.get_game_odds_line(game))[0],
                          'odds_line_spread': game_fields.parse_game_odds_line(game_fields.get_game_odds_line(game))[1],
-                         'odds_ou': game_fields.get_game_odds_ou(game),
+                         'odds_ou': game_fields.parse_game_odds_ou(game),
                          'neutral_site': game_fields.get_neutral_site_ind(game),
                          'weather_conditions': game_fields.get_game_weather_conditions(game),
                          'weather_temp_type': game_fields.get_game_weather_temp(game)[0],

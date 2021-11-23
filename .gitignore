@@ -1,3 +1,7 @@
+# Personal
+.DS_Store
+*.code-workspace
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
