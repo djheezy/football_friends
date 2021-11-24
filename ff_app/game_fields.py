@@ -26,7 +26,6 @@ def get_home_abbr(game):
     return value
 
 
-
 def get_away_abbr(game):
     try:
         value = game['teams'][1]['abbrev']
@@ -67,7 +66,7 @@ def get_game_odds_line(game):
 
 def has_odds(game):
     try:
-        value = 'odds' in game
+        value = ('odds' in game) & ('details' in game['odds'])
     except:
         value = None
     return value
