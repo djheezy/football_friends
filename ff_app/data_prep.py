@@ -141,6 +141,22 @@ def implied_score_string(favorite, underdog, spread, total):
 
 
 def get_short_data(row):
+
+    # Cleanup for when the odds favorite is formatted differently from the
+    # home or away team abbreviations
+    line_team_cleanup = {
+        'COASTALCAR': 'CCU',    # Observed 2022 Week 1
+        'KANSASST': 'KSU',      # 2022 Week 2
+        'MICHIGANST': 'MSU',
+        'ULLAFAYTTE': 'UL',
+        'OKLAST': 'OKST',
+        'OREGONST': 'ORST',
+        'MISSSTATE': 'MSST',
+        'GATECH': 'GT'
+    }
+    row['odds_line_fav'] = \
+        line_team_cleanup.get(row['odds_line_fav'], row['odds_line_fav'])
+
     if row['odds_line_fav'] == 'EVEN':
         favorite = row['home_abbr']
         location = 'vs'

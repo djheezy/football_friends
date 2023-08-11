@@ -4,9 +4,10 @@ import inspect
 import logging
 
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+
+from oauth2client.service_account import ServiceAccountCredentials
 
 from .config import CONFIG
 
@@ -23,9 +24,7 @@ class GoogleSheetsReadWrite:
         self.spreadsheet_id = spreadsheet_id \
             or CONFIG['google']['spreadsheet_id']
         self.creds = self.get_credentials(creds_dir)
-        # self.sheet_name = sheet_name
-        # self.sheet_range = sheet_range
-        # self.range_name = f'{sheet_name}!{sheet_range}'
+
         
     def get_credentials(self, creds_dir):
         """
@@ -50,9 +49,10 @@ class GoogleSheetsReadWrite:
                 LOGGER.info("Refreshed expired credentials")
             else:
                 LOGGER.info("Obtaining a token using credentials stored in 'credentials.json")
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    os.path.join(creds_dir, 'credentials.json'), scopes)
-                creds = flow.run_local_server(port=0)
+
+                creds = ServiceAccountCredentials.from_json_keyfile_name(
+                    os.path.join(creds_dir, 'credentials.json'), scopes) 
+
                 LOGGER.info("Obtained a token using stored credentials")
             # Save the credentials for the next run
             with open(os.path.join(creds_dir, 'token.json'), 'w') as token:
