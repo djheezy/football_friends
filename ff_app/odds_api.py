@@ -2,7 +2,7 @@
 import logging
 import os
 import json
-from datetime import datetime, date
+from datetime import datetime
 
 import requests
 import pandas as pd
@@ -120,7 +120,7 @@ def filter_games_to_week(input_df, week):
     filtered_df = input_df[
         (input_df['game_time'] >= start_date) & 
         (input_df['game_time'] <= end_date)
-    ]
+    ].copy()
     
     return filtered_df
 
@@ -128,15 +128,45 @@ def filter_games_to_week(input_df, week):
 def clean_games_df(input_df):
     """
     """
+    clean_df = input_df[~input_df['last_update'].isnull()].copy()
 
+    def _favorite(row):
+        if row['home_spread_points'] < row['away_spread_points']:
+            favorite, underdog = row['home_team'], row['away_team']
+        elif row['away_spread_points'] < row['home_spread_points']:
+            favorite, underdog =  row['away_team'], row['home_team']
+        elif row['home_spread_points'] == row['away_spread_points']:
+            favorite, underdog = 'Push', 'Push'
+        else:
+            favorite, underdog = 'Error', 'Error'
+        
+        row['favorite'] = favorite
+        row['underdog'] = underdog
+        
+        return row
 
-    clean_df['']
+    clean_df = clean_df.apply(
+        _favorite, axis=1
+    )
 
+    clean_df['odds_line'] = clean_df.apply(
+        lambda x: min(x['home_spread_points'], x['away_spread_points']),
+        axis=1
+    )
+    clean_df['odds_ou'] = clean_df['over_points']
+
+    def _calc_implied_score(row):
+        baseline = row['odds_ou'] / 2
+        adj = (row['odds_line'] / 2) * -1
+
+        favorite_score = int(baseline + adj)
+        underdog_score = int(baseline - adj)
+
+        return str(favorite_score) + " - " + str(underdog_score)
+
+    clean_df['implied_score'] = clean_df.apply(_calc_implied_score, axis=1)
 
     return clean_df
-
-
-
 
 
 def run(week,
@@ -148,5 +178,6 @@ def run(week,
     raw_data = make_odds_api_call(api_key_path)
     formatted_data = create_games_df(raw_data, sportsbook)
     filtered_data = filter_games_to_week(formatted_data, week)
+    clean_data = clean_games_df(filtered_data)
 
-    return formatted_data
+    return clean_data
