@@ -1,8 +1,31 @@
+week_end_dates:
+  0: '2023-09-05'
+  1: '2023-09-11'
+  2: '2023-09-18'
+  3: '2023-09-25'
+  4: '2023-10-02'
+  5: '2023-10-09'
+  6: '2023-10-16'
+  7: '2023-10-23'
+  8: '2023-10-30'
+  9: '2023-11-06'
+  10: '2023-11-13'
+  11: '2023-11-20'
+  12: '2023-11-27'
+  13: '2023-12-04'
 google:
   credentials_path: '~/dev/football/credentials'
-  spreadsheet_id: '1jlDdFE1zlYOVb535x15QVmEAlxB0rQYM6ARjY8vaQ3w'
+  spreadsheet_id: '1bxqOme4RHBUMgc5ojKr-RgGt3vfetGDAZ1sfs0SeWw4'
+odds_api:
+  api_key_path: '~/dev/football/credentials/api_key.json'
+  api_params:
+    markets: 'spreads,totals' # h2h | spreads | totals. Multiple can be specified if comma delimited
+    regions: 'us'
+    oddsFormat: 'american' # decimal | american
+    dateFormat: 'iso' # iso | unix
+  sportsbook: 'williamhill_us'  # fanduel | unibet_us | draftkings | bovada | betonlineag | lowvig | mybookieag | superbook | pointsbetus | betmgm | barstool
 games:
-  year: 2022
+  year: 2023
   url:
     bowls: 'http://www.espn.com/college-football/scoreboard/_/group/80/year/{year}/seasontype/3/week/1'
     inseason: 'http://www.espn.com/college-football/scoreboard/_/group/80/year/{year}/seasontype/2/week/{week}'
