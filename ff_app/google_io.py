@@ -45,18 +45,18 @@ class GoogleSheetsReadWrite:
             LOGGER.info("Obtained credentails from existing 'token.json' file")
         # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-                LOGGER.info("Refreshed expired credentials")
-            else:
-                LOGGER.info("Obtaining a token using credentials stored in 'credentials.json")
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    os.path.join(creds_dir, 'credentials.json'), scopes)
-                creds = flow.run_local_server(port=0)
-                # creds = ServiceAccountCredentials.from_json_keyfile_name(
-                #     os.path.join(creds_dir, 'credentials.json'), scopes) 
+            # if creds and creds.expired and creds.refresh_token:
+            #     creds.refresh(Request())
+            #     LOGGER.info("Refreshed expired credentials")
+            # else:
+            LOGGER.info("Obtaining a token using credentials stored in 'credentials.json")
+            flow = InstalledAppFlow.from_client_secrets_file(
+                os.path.join(creds_dir, 'credentials.json'), scopes)
+            creds = flow.run_local_server(port=0)
+            # creds = ServiceAccountCredentials.from_json_keyfile_name(
+            #     os.path.join(creds_dir, 'credentials.json'), scopes) 
 
-                LOGGER.info("Obtained a token using stored credentials")
+            LOGGER.info("Obtained a token using stored credentials")
             # Save the credentials for the next run
             with open(os.path.join(creds_dir, 'token.json'), 'w') as token:
                 token.write(creds.to_json())

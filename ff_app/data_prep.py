@@ -42,6 +42,7 @@ def pick_sheet_summary(game_data):
             'underdog': 'Underdog',
             'odds_line': 'Spread',
             'odds_ou': 'Total',
+            'game_desc': 'Description',
             'implied_score': 'Implied Score'
         },
         inplace=True
@@ -50,7 +51,8 @@ def pick_sheet_summary(game_data):
 
     short_df = short_df[
         ['Week', 'Datetime', 'Mandatory', 'Home Team', 'Away Team',
-         'Favorite', 'Underdog', 'Spread', 'Total', 'Implied Score']
+         'Favorite', 'Underdog', 'Spread', 'Total',
+         'Description', 'Implied Score']
     ]
     short_df['Total'] = short_df['Total'].fillna('')
     return short_df
@@ -68,7 +70,5 @@ def create_sheet_outputs(game_data, week_num):
     )
     full_df.reset_index(drop=True, inplace=True)
     pick_sheet_df = pick_sheet_summary(full_df)
-
-    pick_sheet_df.sort_values(by='Datetime', inplace=True)
 
     return pick_sheet_df

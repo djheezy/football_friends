@@ -2,12 +2,12 @@
 import logging
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import requests
 import pandas as pd
 
-from .config import CONFIG
+from .config import CONFIG, TEAM_LOOKUP
 
 
 LOGGER = logging.getLogger()
@@ -165,6 +165,29 @@ def clean_games_df(input_df):
         return str(favorite_score) + " - " + str(underdog_score)
 
     clean_df['implied_score'] = clean_df.apply(_calc_implied_score, axis=1)
+
+    def _calc_game_desc(row):
+        "fav abbrev @/vs dog abbrev"
+        if row['away_team'] == row['favorite']:
+            location = '@'
+        else:
+            location = 'vs'
+        
+        favorite = TEAM_LOOKUP[row['favorite']]['Abbreviation']
+        underdog = TEAM_LOOKUP[row['underdog']]['Abbreviation']
+
+        game_str = f'{favorite} {location} {underdog}'
+
+        return game_str
+
+    clean_df['game_desc'] = clean_df.apply(_calc_game_desc, axis=1)
+
+    # Adjust from UTC to US Eastern (offset=-4)
+    clean_df['game_time'] = clean_df['game_time'].apply(
+        lambda x: x - timedelta(hours=4)
+    )
+    clean_df.sort_values(by='game_time', inplace=True)
+    clean_df.reset_index(drop=True, inplace=True)
 
     return clean_df
 
