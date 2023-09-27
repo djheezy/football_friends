@@ -1,2 +1,2 @@
 
-from .config import CONFIG
+from .config import BASE_PATH, CONFIG, TEAM_LOOKUP

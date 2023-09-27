@@ -172,9 +172,13 @@ def clean_games_df(input_df):
             location = '@'
         else:
             location = 'vs'
-        
-        favorite = TEAM_LOOKUP[row['favorite']]['Abbreviation']
-        underdog = TEAM_LOOKUP[row['underdog']]['Abbreviation']
+
+        if row['favorite'] == 'Push':
+            favorite = TEAM_LOOKUP[row['home_team']]['Abbreviation']
+            underdog = TEAM_LOOKUP[row['away_team']]['Abbreviation']
+        else:
+            favorite = TEAM_LOOKUP[row['favorite']]['Abbreviation']
+            underdog = TEAM_LOOKUP[row['underdog']]['Abbreviation']
 
         game_str = f'{favorite} {location} {underdog}'
 

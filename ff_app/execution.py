@@ -94,10 +94,14 @@ def update_google_sheet(picks_view, player_list=None):
     for col in picks_df.columns:
         picks_df[col] = picks_df[col].fillna('').astype(str)
 
+    short_df = picks_df[[
+        'Week', 'Datetime', 'Mandatory', 'Favorite', 'Underdog',
+        'Description', 'Spread', 'Total', 'Implied Score'
+    ]]
     players = player_list or CONFIG['player_list']
     for p in players:
         LOGGER.info("Writing data for %s", p)
-        io.write(p, picks_df)
+        io.write(p, short_df)
 
     LOGGER.info("Writing out game list")
     cols = [col for col in picks_df.columns.tolist() if col != 'Mandatory']
