@@ -51,7 +51,7 @@ def pick_sheet_summary(game_data):
 
     short_df = short_df[
         ['Week', 'Datetime', 'Mandatory', 'Home Team', 'Away Team',
-         'Favorite', 'Underdog', 'Description', 'Spread', 'Total', 'Implied Score']
+         'Favorite', 'Underdog', 'Spread', 'Total', 'Description', 'Implied Score']
     ]
     short_df['Total'] = short_df['Total'].fillna('')
     return short_df
